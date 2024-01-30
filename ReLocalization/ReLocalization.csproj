@@ -39,30 +39,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\References\YamlDotNet.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>..\References\0Harmony.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>..\References\BepInEx.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\References\UnityEngine.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\References\UnityEngine.CoreModule.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="PotionCraft.Scripts">
-      <HintPath>..\References\PotionCraft.Scripts.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+    <Reference Include="YamlDotNet" HintPath="..\References\YamlDotNet.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath ="..\References\0Harmony.dll" Private ="false" />
+    <Reference Include="BepInEx" HintPath="..\References\BepInEx.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="..\References\UnityEngine.dll" Private ="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="..\References\UnityEngine.CoreModule.dll" Private ="false" />
+    <Reference Include="PotionCraft.Scripts" HintPath="..\References\PotionCraft.Scripts.dll" Private ="false" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModInfo.cs" />
@@ -70,6 +52,9 @@
     <Compile Include="Localization.cs" />
     <Compile Include="Patches\LocalizationPatch.cs"/>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Resources\**" Link="%(RecursiveDir)\%(FileName)%(Extension)" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
