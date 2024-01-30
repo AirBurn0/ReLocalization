@@ -1,0 +1,8 @@
+# localization example
+# comment
+localization_key_string: value
+idk_some_key: "idk some value"
+lorem_ipsum: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n
+  Cras ornare tellus lacus, ut sollicitudin ligula ullamcorper nec.\n
+  Duis consectetur eu nunc a dictum.\n
+  Vivamus quam sem, tempor at arcu at, tempor sagittis ipsum."
