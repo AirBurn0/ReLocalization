@@ -10,7 +10,6 @@ namespace ReLocalization
 	public class ModInfo : BaseUnityPlugin
 	{
 		private static new ManualLogSource Logger;
-
 		public const string GUID = "AirBurn.ReLocalization";
 		public const string MODNAME = "ReLocalization";
 		public const string VERSION = "1.1.0.0";
@@ -19,16 +18,16 @@ namespace ReLocalization
 		{
 			Logger = base.Logger;
 			GlobalConfigs.LazyLoad = Config.Bind(
-				"General", 
-				"LazyLoad", 
-				true, 
+				"General",
+				"LazyLoad",
+				true,
 				"Should all localization be lazy-loaded or loaded on startup"
 			)
 			.Value;
 			GlobalConfigs.LocalizatorMode = Config.Bind(
-				"General", 
-				"LocalizatorMode", 
-				false, 
+				"General",
+				"LocalizatorMode",
+				false,
 				"Localization keys will be displayed instead of localized text"
 			)
 			.Value;

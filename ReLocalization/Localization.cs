@@ -10,19 +10,19 @@ using static PotionCraft.LocalizationSystem.LocalizationManager;
 
 namespace ReLocalization
 {
-	public static class Localization
-	{
+    public static class Localization
+    {
         private static readonly Dictionary<string, bool> localizations = new Dictionary<string, bool>();
         private static readonly Dictionary<Locale, LocalizationEntry> localizationData = new Dictionary<Locale, LocalizationEntry>();
         private static readonly string locFolderName = "Localization";
         private static readonly string LocalizationPathBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string modLocalizationFolder(string modid) => LocalizationPathBase + Path.DirectorySeparatorChar + modid + Path.DirectorySeparatorChar + locFolderName + Path.DirectorySeparatorChar;
-        
+
         /// <summary>
         ///     Collection of all plugins/mods that uses ReLocalization localization features;
         /// </summary>
         /// <returns>Collection of plugins/mods GUID's</returns>
-        public static ReadOnlyCollection<string> Mods() 
+        public static ReadOnlyCollection<string> Mods()
         {
             return localizations.Keys.ToList().AsReadOnly();
         }
@@ -33,7 +33,7 @@ namespace ReLocalization
         ///     If LazyLoad flag in config set to 'false', also will force-load localization in memory.
         /// </summary>
         /// <param name="mod">The plugin/mod that will be added in localization list.</param>
-        public static void AddLocalizationFor(BaseUnityPlugin mod) 
+        public static void AddLocalizationFor(BaseUnityPlugin mod)
         {
             AddLocalizationFor(MetadataHelper.GetMetadata(mod).GUID);
         }
@@ -43,10 +43,10 @@ namespace ReLocalization
         ///     If LazyLoad flag in config set to 'false', also will force-load localization in memory.
         /// </summary>
         /// <param name="modid">The GUID of the plugin/mod that will be added in localization list.</param>
-        public static void AddLocalizationFor(string modid) 
+        public static void AddLocalizationFor(string modid)
         {
             localizations.Add(modid, false);
-            if(!GlobalConfigs.LazyLoad)
+            if (!GlobalConfigs.LazyLoad)
                 LoadLocalizationFor(modid);
         }
 
@@ -55,24 +55,24 @@ namespace ReLocalization
         ///     This will also add this plugin/mod in localizaton list.
         /// </summary>
         /// <param name="modid">GUID of the plugin/mod whose localization will be force-loaded.</param>
-        internal static void LoadLocalizationFor(string modid) 
+        internal static void LoadLocalizationFor(string modid)
         {
-            foreach(Locale locale in Enum.GetValues(typeof(Locale)))
+            foreach (Locale locale in Enum.GetValues(typeof(Locale)))
             {
                 LoadLocalizationFor(modid, locale);
             }
         }
-        
+
         /// <summary>
         ///     Fully Loads localization in memory for all plugins/mods specified by <see cref="LocalizationHelper.AddLocalizationFor"/> method.
         ///     Do not use this method without serious reasons.
         /// </summary>
         /// <param name="reload">If set true, all localization will be reloaded from disk.</param>
-        public static void LoadAllLocalization(bool reload) 
+        public static void LoadAllLocalization(bool reload)
         {
             // BTW, if you still decide to use this method, it means something isn’t working well for you.
             // Consider using github to report/improve that issue!
-            foreach(Locale locale in Enum.GetValues(typeof(Locale)))
+            foreach (Locale locale in Enum.GetValues(typeof(Locale)))
             {
                 LoadLocalization(locale, reload);
             }
@@ -102,10 +102,10 @@ namespace ReLocalization
         ///     Else translated text for default (en) language;
         ///     Else localization key.
         /// </returns>
-        public static string GetLocalized(string key, Locale locale) 
+        public static string GetLocalized(string key, Locale locale)
         {
             string value = GetLocalizedSilent(key, locale);
-            if(value == null)
+            if (value == null)
             {
                 ModInfo.Log((locale == Locale.en ? "D" : $"Neither '{locale}.yml' nor d") + $"efault localization file doesn't contain valid '{key}' key.");
                 return key;
@@ -113,22 +113,22 @@ namespace ReLocalization
             return value;
         }
 
-        internal static void LoadLocalization(Locale locale, bool force) 
+        internal static void LoadLocalization(Locale locale, bool force)
         {
-            foreach(var mod in localizations.Where(mod => force || !mod.Value))   
+            foreach (var mod in localizations.Where(mod => force || !mod.Value))
             {
-                if(mod.Value)
+                if (mod.Value)
                     localizations[mod.Key] = false; // for the case that something fails on reload
                 LoadLocalizationFor(mod.Key, locale);
             }
         }
 
-        internal static void LoadLocalizationFor(string modid, Locale locale) 
+        internal static void LoadLocalizationFor(string modid, Locale locale)
         {
             string path = modLocalizationFolder(modid) + locale + ".yml";
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
-                if(modid != ModInfo.GUID) // It's okay. I can stand it.
+                if (modid != ModInfo.GUID) // It's okay. I can stand it.
                     ModInfo.Log($"'{locale}.yml' localization file doesn't found for mod '{modid}'. Please consider helping mod author to provide translation.", BepInEx.Logging.LogLevel.Warning);
                 return;
             }
@@ -137,51 +137,51 @@ namespace ReLocalization
             localizations[modid] = true;
         }
 
-        internal static void TryLoadLocale(Locale locale) 
+        internal static void TryLoadLocale(Locale locale)
         {
-            if(!localizationData.ContainsKey(locale))
+            if (!localizationData.ContainsKey(locale))
                 LoadLocalization(locale, false);
         }
 
-        internal static string GetLocalizedSilent(string key, Locale locale) 
+        internal static string GetLocalizedSilent(string key, Locale locale)
         {
             TryLoadLocale(locale);
             string value = null;
-            if(localizationData.TryGetValue(locale, out LocalizationEntry entry))
+            if (localizationData.TryGetValue(locale, out LocalizationEntry entry))
                 value = entry.GetLocalization(key);
             return value ?? ((locale != Locale.en) ? GetLocalizedSilent(key, Locale.en) : null);
         }
 
-        private static LocalizationEntry ReadLocalizationByPath(string path) 
+        private static LocalizationEntry ReadLocalizationByPath(string path)
         {
             LocalizationEntry entry = new LocalizationEntry();
-            using(var stream = new StreamReader(path))
+            using (var stream = new StreamReader(path))
             {
                 var yaml = new YamlStream();
                 yaml.Load(stream);
-                if(yaml.Documents.Count == 0)
+                if (yaml.Documents.Count == 0)
                 {
                     ModInfo.Log($"Empty localization file on path {path}!", BepInEx.Logging.LogLevel.Error);
                     return entry;
                 }
-                foreach(var node in yaml.Documents[0].RootNode as YamlMappingNode)
+                foreach (var node in yaml.Documents[0].RootNode as YamlMappingNode)
                 {
                     entry.AddLocalization((string)node.Key, (string)node.Value);
                 }
             }
             return entry;
         }
-        
+
         internal class LocalizationEntry
         {
             internal readonly Dictionary<string, string> localizationData = new Dictionary<string, string>();
-            
-            internal void AddLocalization(string key, string value) 
+
+            internal void AddLocalization(string key, string value)
             {
                 localizationData[key] = value;
             }
 
-            internal string GetLocalization(string key) 
+            internal string GetLocalization(string key)
             {
                 if (localizationData.TryGetValue(key, out string value))
                     return value;
