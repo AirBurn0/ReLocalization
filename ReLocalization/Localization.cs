@@ -145,9 +145,10 @@ namespace ReLocalization
         internal static string GetLocalizedSilent(string key, Locale locale) 
         {
             TryLoadLocale(locale);
+            string value = null;
             if(localizationData.TryGetValue(locale, out LocalizationEntry entry))
-                return entry.GetLocalization(key) ?? ((locale != Locale.en) ? GetLocalizedSilent(key, Locale.en) : null);
-            return null;
+                value = entry.GetLocalization(key);
+            return value ?? ((locale != Locale.en) ? GetLocalizedSilent(key, Locale.en) : null);
         }
 
         private static LocalizationEntry ReadLocalizationByPath(string path) 
