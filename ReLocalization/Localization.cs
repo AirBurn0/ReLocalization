@@ -15,7 +15,8 @@ namespace ReLocalization
         private static readonly Dictionary<string, bool> localizations = new Dictionary<string, bool>();
         private static readonly Dictionary<Locale, LocalizationEntry> localizationData = new Dictionary<Locale, LocalizationEntry>();
         private static readonly string locFolderName = "Localization";
-        private static readonly string LocalizationPathBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar + locFolderName + Path.DirectorySeparatorChar;
+        private static readonly string LocalizationPathBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string modLocalizationFolder(string modid) => LocalizationPathBase + Path.DirectorySeparatorChar + modid + Path.DirectorySeparatorChar + locFolderName + Path.DirectorySeparatorChar;
         
         /// <summary>
         ///     Collection of all plugins/mods that uses ReLocalization localization features;
@@ -124,7 +125,7 @@ namespace ReLocalization
 
         internal static void LoadLocalizationFor(string modid, Locale locale) 
         {
-            string path = LocalizationPathBase + modid + Path.DirectorySeparatorChar + locale + ".yml";
+            string path = modLocalizationFolder(modid) + locale + ".yml";
             if(!File.Exists(path))
             {
                 if(modid != ModInfo.GUID) // It's okay. I can stand it.
