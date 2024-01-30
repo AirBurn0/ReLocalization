@@ -57,6 +57,15 @@ This mod actually does just that.
 Don't forget to create mod localization files and folder.
 As example - __'..\\Potion Craft\\BepInEx\\plugins\\Localization\\AirBurn.ReLocalization\\en.yml'__ would provide localization for this mod. If it had it (however, you can still write __something__ there and for sure, __funny things__ will happen).
 
+Localization file structure, if it's not obvious, - YAML.
+This means that the content of the files will look like this:
+```
+# comment
+localization_key_string: value
+idk_some_key: "idk some value"
+```
+Quotes aren't necessary for plain text, since it's YAML.
+
 Basically there is no guides. If some more complex examples needed - consider searching for some mod that uses this and reading it's repo.
 
 ## [Crucible](https://github.com/RoboPhred/potioncraft-crucible) (Potion Craft) exists, you know?
