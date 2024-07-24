@@ -14,6 +14,12 @@ namespace ReLocalization
             get;
             set;
         }
+        
+        public static bool LogLoad
+        {
+            get;
+            set;
+        }
 
     }
 }

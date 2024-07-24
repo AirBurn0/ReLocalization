@@ -107,7 +107,7 @@ namespace ReLocalization
             string value = GetLocalizedSilent(key, locale);
             if (value == null)
             {
-                ModInfo.Log((locale == Locale.en ? "D" : $"Neither '{locale}.yml' nor d") + $"efault localization file doesn't contain valid '{key}' key.");
+                ModInfo.Log((locale == Locale.en ? "D" : $"Neither '{locale}.yml' nor d") + $"efault localization file doesn't contain valid '{key}' key.", BepInEx.Logging.LogLevel.Error);
                 return key;
             }
             return value;
@@ -128,11 +128,12 @@ namespace ReLocalization
             string path = modLocalizationFolder(modid) + locale + ".yml";
             if (!File.Exists(path))
             {
-                if (modid != ModInfo.GUID) // It's okay. I can stand it.
+                if (GlobalConfigs.LogLoad && modid != ModInfo.GUID) // It's okay. I can stand it.
                     ModInfo.Log($"'{locale}.yml' localization file doesn't found for mod '{modid}'. Please consider helping mod author to provide translation.", BepInEx.Logging.LogLevel.Warning);
                 return;
             }
-            ModInfo.Log($"'{locale}.yml' found for mod '{modid}'.", BepInEx.Logging.LogLevel.Message);
+            if(GlobalConfigs.LogLoad)
+                ModInfo.Log($"'{locale}.yml' found for mod '{modid}'.", BepInEx.Logging.LogLevel.Message);
             localizationData[locale] = ReadLocalizationByPath(path);
             localizations[modid] = true;
         }

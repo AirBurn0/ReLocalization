@@ -1,6 +1,3 @@
-# WARNING!
-
-Project is still in HEAVY beta-shit. No releases - cuz architecture could fucking change at any second because I'm a moron. Beta-phase will not last long, but it is for now.
 # ReLocalization for Potion Craft
 
 [![Code license (CC BY-NC 4.0)](https://img.shields.io/badge/License-CC%20BY--NC%204.0-blue.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc/4.0)

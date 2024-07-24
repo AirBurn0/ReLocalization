@@ -31,6 +31,13 @@ namespace ReLocalization
 				"Localization keys will be displayed instead of localized text"
 			)
 			.Value;
+			GlobalConfigs.LogLoad = Config.Bind(
+				"General",
+				"LogLoad",
+				false,
+				"Show logs about the presence and absence of localization files"
+			)
+			.Value;
 			Localization.AddLocalizationFor(this);
 			Harmony.CreateAndPatchAll(typeof(LocalizationPatch));
 			Logger.LogInfo($"{MODNAME} succesfully loaded");
