@@ -34,7 +34,7 @@ namespace ReLocalization
 			GlobalConfigs.LogLoad = Config.Bind(
 				"General",
 				"LogLoad",
-				false,
+				true,
 				"Show logs about the presence and absence of localization files"
 			)
 			.Value;
