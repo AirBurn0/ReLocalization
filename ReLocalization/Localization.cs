@@ -135,7 +135,7 @@ namespace ReLocalization
             if(GlobalConfigs.LogLoad)
                 ModInfo.Log($"'{locale}.yml' found for mod '{modid}'.", BepInEx.Logging.LogLevel.Message);
             localizationData[locale] = ReadLocalizationByPath(path);
-             localizations[modid] = true;
+            localizations[modid] = true;
         }
 
         internal static void TryLoadLocale(Locale locale)
