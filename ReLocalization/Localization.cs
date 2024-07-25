@@ -115,11 +115,11 @@ namespace ReLocalization
 
         internal static void LoadLocalization(Locale locale, bool force)
         {
-            foreach (var mod in localizations.Where(mod => force || !mod.Value))
+            foreach (var mod in localizations.Keys.Where(mod => force || !localizations[mod]).ToArray())
             {
-                if (mod.Value)
-                    localizations[mod.Key] = false; // for the case that something fails on reload
-                LoadLocalizationFor(mod.Key, locale);
+                if (localizations[mod])
+                    localizations[mod] = false; // for the case that something fails on reload
+                LoadLocalizationFor(mod, locale);
             }
         }
 
@@ -135,7 +135,7 @@ namespace ReLocalization
             if(GlobalConfigs.LogLoad)
                 ModInfo.Log($"'{locale}.yml' found for mod '{modid}'.", BepInEx.Logging.LogLevel.Message);
             localizationData[locale] = ReadLocalizationByPath(path);
-            localizations[modid] = true;
+             localizations[modid] = true;
         }
 
         internal static void TryLoadLocale(Locale locale)
