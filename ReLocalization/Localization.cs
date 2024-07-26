@@ -18,7 +18,7 @@ namespace ReLocalization
         private static readonly string locFolderName = "Localization";
         private static readonly Dictionary<string, string> localizationFolders = new Dictionary<string, string>();
 
-        public static string modLocalizationFolder(string modid) => localizationFolders[modid];
+        public static string GetLocalizationFolder(string modid) => localizationFolders[modid];
 
         /// <summary>
         ///     Collection of all plugins/mods that uses ReLocalization localization features;
@@ -38,15 +38,11 @@ namespace ReLocalization
         public static void AddLocalizationFor(BaseUnityPlugin mod)
         {
             string modid = MetadataHelper.GetMetadata(mod).GUID;
-            string modPath = Path.GetDirectoryName(Assembly.GetAssembly(mod.GetType()).Location);
-			string localizationsFolder = Path.Combine(modPath, modid, locFolderName);
-
-
-            localizationFolders.Add(modid, localizationsFolder);
-			localizations.Add(modid, 0);
-			if (!GlobalConfigs.LazyLoad)
-				LoadLocalizationFor(modid);
-		}
+            localizationFolders.Add(modid, Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(mod.GetType()).Location), modid, locFolderName));
+	    localizations.Add(modid, 0);
+	    if (!GlobalConfigs.LazyLoad)
+		LoadLocalizationFor(modid);
+	}
 
         /// <summary>
         ///     Force-Loads localization in memory for specified plugin/mod.
@@ -135,7 +131,7 @@ namespace ReLocalization
         {
 	    if(IsLocalizationLoaded(mod, locale))
 		SetLocalizationLoaded(mod, locale, false); // for the case that something fails on reload
-            string path = Path.Combine(modLocalizationFolder(mod), locale + ".yml");
+            string path = Path.Combine(GetLocalizationFolder(mod), locale + ".yml");
             if (!File.Exists(path))
             {
                 if (GlobalConfigs.LogLoad && mod != ModInfo.GUID) // It's okay. I can stand it.
