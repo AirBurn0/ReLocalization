@@ -14,9 +14,6 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>None</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition="Exists('..\.vscode')">
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>

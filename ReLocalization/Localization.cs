@@ -13,7 +13,7 @@ namespace ReLocalization
 {
     public static class Localization
     {
-        private static readonly Dictionary<string, bool> localizations = new Dictionary<string, bool>();
+        private static readonly Dictionary<string, int> localizations = new Dictionary<string, int>();
         private static readonly Dictionary<Locale, LocalizationEntry> localizationData = new Dictionary<Locale, LocalizationEntry>();
         private static readonly string locFolderName = "Localization";
         private static readonly Dictionary<string, string> localizationFolders = new Dictionary<string, string>();
@@ -43,7 +43,7 @@ namespace ReLocalization
 
 
             localizationFolders.Add(modid, localizationsFolder);
-			localizations.Add(modid, false);
+			localizations.Add(modid, 0);
 			if (!GlobalConfigs.LazyLoad)
 				LoadLocalizationFor(modid);
 		}
@@ -110,30 +110,40 @@ namespace ReLocalization
             }
             return value;
         }
+        
+        internal static bool IsLocalizationLoaded(string mod, Locale locale) {
+            return (localizations[mod] & (1 << (int)locale)) != 0;
+        }
+       
+        internal static void SetLocalizationLoaded(string mod, Locale locale, bool loaded) {
+            int bit = 1 << (int)locale;
+            if(loaded)
+                localizations[mod] |= bit;
+            else
+                localizations[mod] &= ~bit;
+        }
 
         internal static void LoadLocalization(Locale locale, bool force)
         {
-            foreach (var mod in localizations.Keys.Where(mod => force || !localizations[mod]).ToArray())
+            foreach (var mod in localizations.Keys.Where(mod => force || !IsLocalizationLoaded(mod, locale)).ToArray())
             {
-                if (localizations[mod])
-                    localizations[mod] = false; // for the case that something fails on reload
                 LoadLocalizationFor(mod, locale);
             }
         }
 
-        internal static void LoadLocalizationFor(string modid, Locale locale)
+        internal static void LoadLocalizationFor(string mod, Locale locale)
         {
-            string path = Path.Combine(modLocalizationFolder(modid), locale + ".yml");
+            string path = Path.Combine(modLocalizationFolder(mod), locale + ".yml");
             if (!File.Exists(path))
             {
-                if (GlobalConfigs.LogLoad && modid != ModInfo.GUID) // It's okay. I can stand it.
-                    ModInfo.Log($"'{locale}.yml' localization file doesn't found for mod '{modid}'. Please consider helping mod author to provide translation.", BepInEx.Logging.LogLevel.Warning);
+                if (GlobalConfigs.LogLoad && mod != ModInfo.GUID) // It's okay. I can stand it.
+                    ModInfo.Log($"'{locale}.yml' localization file doesn't found for mod '{mod}'. Please consider helping mod author to provide translation.", BepInEx.Logging.LogLevel.Warning);
                 return;
             }
             if(GlobalConfigs.LogLoad)
-                ModInfo.Log($"'{locale}.yml' found for mod '{modid}'.", BepInEx.Logging.LogLevel.Message);
+                ModInfo.Log($"'{locale}.yml' found for mod '{mod}'.", BepInEx.Logging.LogLevel.Message);
             localizationData[locale] = ReadLocalizationByPath(path);
-            localizations[modid] = true;
+            SetLocalizationLoaded(mod, locale, true); 
         }
 
         internal static void TryLoadLocale(Locale locale)

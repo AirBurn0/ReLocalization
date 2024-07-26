@@ -20,22 +20,22 @@ namespace ReLocalization
 			GlobalConfigs.LazyLoad = Config.Bind(
 				"General",
 				"LazyLoad",
-				true,
-				"Should all localization be lazy-loaded or loaded on startup"
+				false,
+				"Should all localization be lazy-loaded or loaded on startup."
+			)
+			.Value;
+			GlobalConfigs.LogLoad = Config.Bind(
+				"General",
+				"LogLoad",
+				false,
+				"Show logs about the presence and absence of localization files. Disable LazyLoad to debug more easly."
 			)
 			.Value;
 			GlobalConfigs.LocalizatorMode = Config.Bind(
 				"General",
 				"LocalizatorMode",
 				false,
-				"Localization keys will be displayed instead of localized text"
-			)
-			.Value;
-			GlobalConfigs.LogLoad = Config.Bind(
-				"General",
-				"LogLoad",
-				true,
-				"Show logs about the presence and absence of localization files"
+				"Localization keys will be displayed instead of localized text."
 			)
 			.Value;
 			Localization.AddLocalizationFor(this);
