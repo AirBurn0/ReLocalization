@@ -12,7 +12,7 @@ namespace ReLocalization
 		private static new ManualLogSource Logger;
 		public const string GUID = "AirBurn.ReLocalization";
 		public const string MODNAME = "ReLocalization";
-		public const string VERSION = "1.1.0.0";
+		public const string VERSION = "1.1.0.1";
 
 		public void Awake()
 		{
