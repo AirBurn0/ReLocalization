@@ -133,6 +133,8 @@ namespace ReLocalization
 
         internal static void LoadLocalizationFor(string mod, Locale locale)
         {
+	    if(IsLocalizationLoaded(mod, locale))
+		SetLocalizationLoaded(mod, locale, false); // for the case that something fails on reload
             string path = Path.Combine(modLocalizationFolder(mod), locale + ".yml");
             if (!File.Exists(path))
             {
