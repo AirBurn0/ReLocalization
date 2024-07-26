@@ -7,6 +7,7 @@ using System.Reflection;
 using BepInEx;
 using YamlDotNet.RepresentationModel;
 using static PotionCraft.LocalizationSystem.LocalizationManager;
+using static UnityEngine.Scripting.GarbageCollector;
 
 namespace ReLocalization
 {
@@ -15,8 +16,9 @@ namespace ReLocalization
         private static readonly Dictionary<string, bool> localizations = new Dictionary<string, bool>();
         private static readonly Dictionary<Locale, LocalizationEntry> localizationData = new Dictionary<Locale, LocalizationEntry>();
         private static readonly string locFolderName = "Localization";
-        private static readonly string LocalizationPathBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        public static string modLocalizationFolder(string modid) => LocalizationPathBase + Path.DirectorySeparatorChar + modid + Path.DirectorySeparatorChar + locFolderName + Path.DirectorySeparatorChar;
+        private static readonly Dictionary<string, string> localizationFolders = new Dictionary<string, string>();
+
+        public static string modLocalizationFolder(string modid) => localizationFolders[modid];
 
         /// <summary>
         ///     Collection of all plugins/mods that uses ReLocalization localization features;
@@ -35,20 +37,16 @@ namespace ReLocalization
         /// <param name="mod">The plugin/mod that will be added in localization list.</param>
         public static void AddLocalizationFor(BaseUnityPlugin mod)
         {
-            AddLocalizationFor(MetadataHelper.GetMetadata(mod).GUID);
-        }
-        /// <summary>
-        ///     Adding this plugin/mod in localizaton list.
-        ///     This will allow localization keys for plugin/mod to be translated in the future.
-        ///     If LazyLoad flag in config set to 'false', also will force-load localization in memory.
-        /// </summary>
-        /// <param name="modid">The GUID of the plugin/mod that will be added in localization list.</param>
-        public static void AddLocalizationFor(string modid)
-        {
-            localizations.Add(modid, false);
-            if (!GlobalConfigs.LazyLoad)
-                LoadLocalizationFor(modid);
-        }
+            string modid = MetadataHelper.GetMetadata(mod).GUID;
+            string modPath = Path.GetDirectoryName(Assembly.GetAssembly(mod.GetType()).Location);
+			string localizationsFolder = Path.Combine(modPath, modid, locFolderName);
+
+
+            localizationFolders.Add(modid, localizationsFolder);
+			localizations.Add(modid, false);
+			if (!GlobalConfigs.LazyLoad)
+				LoadLocalizationFor(modid);
+		}
 
         /// <summary>
         ///     Force-Loads localization in memory for specified plugin/mod.
@@ -125,7 +123,7 @@ namespace ReLocalization
 
         internal static void LoadLocalizationFor(string modid, Locale locale)
         {
-            string path = modLocalizationFolder(modid) + locale + ".yml";
+            string path = Path.Combine(modLocalizationFolder(modid), locale + ".yml");
             if (!File.Exists(path))
             {
                 if (GlobalConfigs.LogLoad && modid != ModInfo.GUID) // It's okay. I can stand it.
